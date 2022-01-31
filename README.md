@@ -30,3 +30,7 @@ on the local machine you should run the following:
 # Project Features
 <!-- What are the features included in you app -->
 The code using a slightly code with a good documentation
+
+
+## Movies-Library (API) WRRC
+<img src="assets/api.jpg" alt="Movies-Library WRRC">
