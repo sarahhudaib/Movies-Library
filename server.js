@@ -4,6 +4,9 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
+const pg = require('pg');
+
+const client = new pg.Client(process.env.DATABASE_URL);
 
 const PORT = process.env.PORT;
 const server = express();
@@ -15,13 +18,18 @@ const movieData = require('./data.json');
 
 //app.get('/',movieHandler);
 
-app.get('/favorite',helloWorldHandler)
-app.get('/trending',trendingHandler)
-app.get('/search',searchHandler)
-app.get('/find', findHandler)
-app.get('/discover',discoverHandler)
-server.use('*',notFoundHandler)
-server.use(errorHandler)
+app.get('/favorite',helloWorldHandler);
+app.get('/trending',trendingHandler);
+app.get('/search',searchHandler);
+app.get('/find', findHandler);
+app.get('/discover',discoverHandler);
+
+server.post('/addMovie',addMovieHandler);
+app.get('/getMovies',getMoviesHandler);
+
+server.use(express.json());
+server.use('*',notFoundHandler);
+server.use(errorHandler);
 
 //constructor
 function Movie (id,title,release_date,poster_path,overview){
@@ -33,14 +41,13 @@ function Movie (id,title,release_date,poster_path,overview){
    
 }
 let numberOfMovies=5;
-let userSearch = "The";
+//let userSearch = "The";
 let url = `https://api.themoviedb.org/3/trending/all/week/random?apiKey=${process.env.APIKEY}&number=${numberOfMovies}`;
 
 function helloWorldHandler(req,res){
     return res.status(200).send("Welcome to your Favorite Page ");
 
 }
-
 
 // function movieHandler (req,res){
 //     let movies=[];
@@ -113,6 +120,28 @@ function discoverHandler(){
 
 }
 
+function addMovieHandler(req,res){
+    const movies = req.body;
+    //   console.log(movies)
+      let sql = `INSERT INTO favMovies(id,title,release_date,poster_path,overview) VALUES ($1,$2,$3,$4,$5) RETURNING *;`
+      let values=[movies.id,movies.title,movies.release_date,movies.poster_path,movies.overview];
+      client.query(sql,values).then(data =>{
+          res.status(200).json(data.rows);
+      }).catch(error=>{
+          errorHandler(error,req,res)
+      });
+
+}
+
+function getMoviesHandler(req,res){
+    let sql = `SELECT * FROM favMovies;`;
+    client.query(sql).then(data=>{
+       res.status(200).json(data.rows);
+    }).catch(error=>{
+        errorHandler(error,req,res)
+    });
+}
+
 
 function notFoundHandler(req,res){
     res.status(404).send("This page is not found")
@@ -126,7 +155,9 @@ function errorHandler(error,req,res){
 res.status(500).send(err);
  }
 
- server.listen(PORT,()=>{
-    console.log(`listining to port ${PORT}`)
+ client.connect().then(()=>{
+    server.listen(PORT,()=>{
+        console.log(`listining to port ${PORT}`)
+    })
 })
 
