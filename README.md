@@ -38,6 +38,16 @@ The code using a slightly code with a good documentation
 ## Movies-Library (Data Base) WRRC
 <img src="assets/database.jpg" alt="Movies-Library DB">
 
+## Today on day 13 we will be able to:
+
+1. Describe and Define: Database (DBMS,SQL,NoSQL), Relational Databases, Tables, Columns, Rows, Records, SQL Language
+2. How CRUD relates to SQL
+3. pg client library for Node
+4. Connect a node server to a Postgres DB
+5. Build a schema
+6. Save (INSERT) records to the database
+7. Read (SELECT) records from the database
+
 
 ## Today on day 14 we will be able to:
 
