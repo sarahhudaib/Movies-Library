@@ -37,3 +37,40 @@ The code using a slightly code with a good documentation
 
 ## Movies-Library (Data Base) WRRC
 <img src="assets/database.jpg" alt="Movies-Library DB">
+
+
+## Today on day 14 we will be able to:
+
+1. Create update and delete requests
+2. Update (UPDATE) a record in the database
+3. Delete (Delete) a record from the database
+4. Read (SELECT) a record from the database
+
+
+## The most common HTTP Status Codes:
+
+Success codes HTTP status codes
+
+1. 200 OK
+2. 201 Created
+3. 202 Accepted
+4. 203 Non-authoritative Information
+5. 204 No Content
+6. 205 Reset Content
+
+Client Error HTTP status codes
+
+1. 400 Bad Request
+2. 401 Unauthorized
+3. 402 Payment Required
+4. 403 Forbidden
+5. 404 Not Found
+
+Server Error HTTP status codes
+
+1. 500 Internal Server Error
+2. 501 Not Implemented
+3. 502 Bad Gateway
+4. 503 Service Unavailable
+5. 504 Gateway Timeout
+6.  505 HTTP Version Not Supported
