@@ -7,9 +7,12 @@ const cors = require('cors');
 
 const axios = require('axios');
 const pg = require('pg');
-
-const client = new pg.Client(process.env.DATABASE_URL);
-
+ const client = new pg.Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
+})
+// const client = new pg.Client(process.env.DATABASE_URL);
+// console.log(process.env.DATABASE_URL);
 const PORT = process.env.PORT;
 // const server = express();
 const app = express();
@@ -206,6 +209,11 @@ function errorHandler(error,req,res){
 }
 res.status(500).send(err);
  }
+
+//  const client = new pg.Client({
+//     connectionString: process.env.DATABASE_URL,
+//     ssl: { rejectUnauthorized: false }
+// })
 
  client.connect().then(()=>{
     app.listen(PORT,()=>{
