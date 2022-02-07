@@ -18,8 +18,8 @@ const movieData = require('./data.json');
 app.get('/favorite',helloWorldHandler)
 app.get('/trending',trendingHandler)
 app.get('/search',searchHandler)
-app.get('/find', findHandler)
-app.get('/discover',discoverHandler)
+// app.get('/find', findHandler)
+// app.get('/discover',discoverHandler)
 server.use('*',notFoundHandler)
 server.use(errorHandler)
 
@@ -33,8 +33,8 @@ function Movie (id,title,release_date,poster_path,overview){
    
 }
 let numberOfMovies=5;
-let userSearch = "The";
-let url = `https://api.themoviedb.org/3/trending/all/week/random?apiKey=${process.env.APIKEY}&number=${numberOfMovies}`;
+//let userSearch = "The";
+let url = `https://api.themoviedb.org/3/trending/all/week?api_key=${process.env.APIKEY}&language=en-US`;
 
 function helloWorldHandler(req,res){
     return res.status(200).send("Welcome to your Favorite Page ");
@@ -54,11 +54,10 @@ function helloWorldHandler(req,res){
 
 function trendingHandler(req,res){
     let newArr = [];
-    axios.get(url)
-     .then((result)=>{
-        // console.log(result.data.recipes);
-        let trending = result.data.trending.map(movie =>{
-            return new Movie(movie.id,movie.title,movie.release_date,movie.poster_path,movie.overview);
+    axios.get(url).then((result)=>{
+        
+        result.data.results.forEach(movie =>{
+        userSearch(new Movie(movie.id,movie.title,movie.release_date,movie.poster_path,movie.overview));
         });
       
         res.status(200).json(newArr);
@@ -70,11 +69,10 @@ function trendingHandler(req,res){
 }
 
 function searchHandler(req,res){
-    let url = `https://api.themoviedb.org/3/search/movie/random?api=${process.env.APIKEY}&number=${numberOfMovies}&query=${userSearch}`;
-
-    axios.get(url)
-    .then(result=>{
-        let searching = result.data.searching.map(movie =>{
+   let userSearch= req.userSearch;
+    let url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.APIKEY}&language=en-US&query=${userSearch}`;
+    axios.get(url).then(result=>{
+        let searching = result.data.results.map(movie =>{
             return new Movie(movie.id,movie.title,movie.release_date,movie.poster_path,movie.overview);
         });
         res.status(200).json(searching);  
@@ -83,35 +81,35 @@ function searchHandler(req,res){
     })
 }
 
-function findHandler (){
-    let url = `https://api.themoviedb.org/3/find/%7Bexternal_id%7D/random?api=${process.env.APIKEY}&number=${numberOfMovies}&query=${userSearch}`;
+// function findHandler (){
+//     let url = `https://api.themoviedb.org/3/find/%7Bexternal_id%7D/random?api=${process.env.APIKEY}&number=${numberOfMovies}&query=${userSearch}`;
 
-    axios.get(url)
-    .then(result=>{
-        let searching = result.data.searching.map(movie =>{
-            return new Movie(movie.id,movie.title,movie.release_date,movie.poster_path,movie.overview);
-        });
-        res.status(200).json(searching);  
-     }).catch(err=>{
-        errorHandler(err,req,res);
-    })
+//     axios.get(url)
+//     .then(result=>{
+//         let searching = result.data.searching.map(movie =>{
+//             return new Movie(movie.id,movie.title,movie.release_date,movie.poster_path,movie.overview);
+//         });
+//         res.status(200).json(searching);  
+//      }).catch(err=>{
+//         errorHandler(err,req,res);
+//     })
 
-}
+// }
 
-function discoverHandler(){
-    let url = `https://api.themoviedb.org/3/discover/movie/random?api=${process.env.APIKEY}&number=${numberOfMovies}&query=${userSearch}`;
+// function discoverHandler(){
+//     let url = `https://api.themoviedb.org/3/discover/movie/random?api=${process.env.APIKEY}&number=${numberOfMovies}&query=${userSearch}`;
 
-    axios.get(url)
-    .then(result=>{
-        let searching = result.data.searching.map(movie =>{
-            return new Movie(movie.id,movie.title,movie.release_date,movie.poster_path,movie.overview);
-        });
-        res.status(200).json(searching);  
-     }).catch(err=>{
-        errorHandler(err,req,res);
-    })
+//     axios.get(url)
+//     .then(result=>{
+//         let searching = result.data.searching.map(movie =>{
+//             return new Movie(movie.id,movie.title,movie.release_date,movie.poster_path,movie.overview);
+//         });
+//         res.status(200).json(searching);  
+//      }).catch(err=>{
+//         errorHandler(err,req,res);
+//     })
 
-}
+// }
 
 
 function notFoundHandler(req,res){
